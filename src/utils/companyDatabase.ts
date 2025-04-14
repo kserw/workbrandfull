@@ -1,35 +1,34 @@
-import fs from 'fs';
-import path from 'path';
 import { CompanyData, StoredCompanyData } from '@/types';
 
-// Path to our "database" file
-const DB_PATH = path.join(process.cwd(), 'company-data.json');
+// In-memory database
+let inMemoryDb: Record<string, StoredCompanyData> = {};
 
-// Initialize the database file if it doesn't exist
-const initDatabase = (): void => {
-  if (!fs.existsSync(DB_PATH)) {
-    fs.writeFileSync(DB_PATH, JSON.stringify({}, null, 2), 'utf8');
+// Initialize with any existing data if in development
+if (process.env.NODE_ENV === 'development') {
+  try {
+    const fs = require('fs');
+    const path = require('path');
+    const DB_PATH = path.join(process.cwd(), 'company-data.json');
+    
+    if (fs.existsSync(DB_PATH)) {
+      const data = fs.readFileSync(DB_PATH, 'utf8');
+      inMemoryDb = JSON.parse(data);
+    }
+  } catch (error) {
+    console.error('Error initializing database:', error);
   }
-};
+}
 
 // Get all companies from the database
 export const getAllCompanies = (): Record<string, StoredCompanyData> => {
-  try {
-    initDatabase();
-    const data = fs.readFileSync(DB_PATH, 'utf8');
-    return JSON.parse(data);
-  } catch (error) {
-    console.error('Error reading company database:', error);
-    return {};
-  }
+  return inMemoryDb;
 };
 
 // Get a specific company from the database
 export const getCompany = (companyName: string): CompanyData | null => {
   try {
-    const companies = getAllCompanies();
     const normalizedName = companyName.trim().toLowerCase();
-    return companies[normalizedName] || null;
+    return inMemoryDb[normalizedName] || null;
   } catch (error) {
     console.error(`Error getting company ${companyName}:`, error);
     return null;
@@ -39,18 +38,27 @@ export const getCompany = (companyName: string): CompanyData | null => {
 // Save a company to the database
 export const saveCompany = (companyName: string, data: CompanyData, email?: string): void => {
   try {
-    const companies = getAllCompanies();
     const normalizedName = companyName.trim().toLowerCase();
     
     // Store the company data with the email and timestamp
-    companies[normalizedName] = {
+    inMemoryDb[normalizedName] = {
       ...data,
-      email: email || companies[normalizedName]?.email,
+      email: email || inMemoryDb[normalizedName]?.email,
       timestamp: new Date().toISOString()
     };
-    
-    fs.writeFileSync(DB_PATH, JSON.stringify(companies, null, 2), 'utf8');
+
+    // Only write to file in development
+    if (process.env.NODE_ENV === 'development') {
+      const fs = require('fs');
+      const path = require('path');
+      const DB_PATH = path.join(process.cwd(), 'company-data.json');
+      fs.writeFileSync(DB_PATH, JSON.stringify(inMemoryDb, null, 2), 'utf8');
+    }
   } catch (error) {
     console.error(`Error saving company ${companyName}:`, error);
+    // Don't throw the error in production
+    if (process.env.NODE_ENV === 'development') {
+      throw error;
+    }
   }
 }; 

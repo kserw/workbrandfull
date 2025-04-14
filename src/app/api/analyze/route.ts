@@ -14,16 +14,9 @@ export async function POST(request: NextRequest) {
   try {
     const { companyName, competitorName, email } = await request.json();
 
-    if (!companyName) {
+    if (!companyName || !competitorName) {
       return NextResponse.json(
-        { error: 'Company name is required' },
-        { status: 400 }
-      );
-    }
-
-    if (!competitorName) {
-      return NextResponse.json(
-        { error: 'Competitor name is required' },
+        { error: 'Company name and competitor name are required' },
         { status: 400 }
       );
     }
@@ -125,49 +118,34 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Check if the user's company name matches one of the predefined competitors
-    // If it does, use the hardcoded data to ensure consistency
-    let userCompanyData: CompanyData | null;
+    // Check if we already have this company in our database
+    let userCompanyData = getCompany(companyName);
     let fromDatabase = false;
     
-    const normalizedCompanyName = companyName.trim().toLowerCase();
-    if (normalizedCompanyName === 'google') {
-      userCompanyData = { ...googleData };
-    } else if (normalizedCompanyName === 'walmart') {
-      userCompanyData = { ...walmartData };
-    } else if (normalizedCompanyName === 'hubspot') {
-      userCompanyData = { ...hubspotData };
-    } else if (normalizedCompanyName === 'nasdaq') {
-      userCompanyData = { ...nasdaqData };
-    } else if (normalizedCompanyName === 'loreal' || normalizedCompanyName === 'l\'oreal' || normalizedCompanyName === 'l oreal') {
-      userCompanyData = { ...lorealData };
-    } else if (normalizedCompanyName === 'mastercard') {
-      userCompanyData = { ...mastercardData };
+    if (userCompanyData) {
+      // If found in database, mark it as from database
+      fromDatabase = true;
+      console.log(`Found company data in database for: ${companyName}`);
     } else {
-      // Check if we already have this company in our database
-      userCompanyData = getCompany(companyName);
+      // If not in database, analyze using OpenAI
+      console.log(`Analyzing new company: ${companyName}`);
+      userCompanyData = await analyzeCompany(companyName);
       
-      if (userCompanyData) {
-        // If found in database, mark it as from database
-        fromDatabase = true;
-        console.log(`Found company data in database for: ${companyName}`);
-      } else {
-        // If not in database, analyze using OpenAI
-        console.log(`Analyzing new company: ${companyName}`);
-        userCompanyData = await analyzeCompany(companyName);
-        
-        // Check if we got a valid response from the OpenAI analysis
-        if (!userCompanyData) {
-          console.error(`Failed to analyze company: ${companyName}. OpenAI API may have returned an invalid response.`);
-          return NextResponse.json(
-            { error: `We couldn't analyze "${companyName}" at this time. Please try again later or choose a different company.` },
-            { status: 500 }
-          );
-        }
-        
-        // Save the new company data to our database for future use
+      if (!userCompanyData) {
+        console.error(`Failed to analyze company: ${companyName}`);
+        return NextResponse.json(
+          { error: `We couldn't analyze "${companyName}" at this time. Please try again later.` },
+          { status: 500 }
+        );
+      }
+      
+      try {
+        // Save the new company data to our in-memory database
         saveCompany(companyName, userCompanyData, email);
         console.log(`Saved company data for: ${companyName}`);
+      } catch (error) {
+        // Log the error but continue since we have the data in memory
+        console.error(`Error saving company data: ${error}`);
       }
     }
 
@@ -177,7 +155,7 @@ export async function POST(request: NextRequest) {
     if (!userCompanyData) {
       console.error(`Failed to verify company data for: ${companyName}`);
       return NextResponse.json(
-        { error: `We couldn't process data for "${companyName}". Please try again with a different company name.` },
+        { error: `We couldn't process data for "${companyName}". Please try again.` },
         { status: 500 }
       );
     }
@@ -192,12 +170,13 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       userCompany: userCompanyData,
       competitor,
-      competitorName
+      competitorName,
+      fromDatabase: fromDatabase
     });
   } catch (error) {
-    console.error('Error in analyze API:', error);
+    console.error('Error in analyze route:', error);
     return NextResponse.json(
-      { error: 'An error occurred while analyzing the company. Please try again later.' },
+      { error: 'An unexpected error occurred. Please try again later.' },
       { status: 500 }
     );
   }
