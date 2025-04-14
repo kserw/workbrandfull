@@ -1,0 +1,300 @@
+@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #ffffff;
+  --foreground: #000000;
+  --workbrand-blue: #2F3295;
+  --workbrand-blue-light: rgba(47, 50, 149, 0.05);
+  --workbrand-blue-dark: #252870;
+  --workbrand-blue-gradient: linear-gradient(135deg, #2F3295, #383BB0, #4346CE);
+  --workbrand-pink: #FE619E;
+  --workbrand-pink-light: rgba(254, 97, 158, 0.1);
+  --workbrand-gradient: linear-gradient(135deg, var(--workbrand-blue), #4B4DC7);
+  --modern-gradient: linear-gradient(135deg, #f6f8fd, #eef1fa, #f8f0fb);
+  --tech-gradient: linear-gradient(135deg, #3440AA, #4050C9, #5165E6);
+  --font-family: 'Montserrat', sans-serif;
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+html {
+  height: 100%;
+}
+
+body {
+  background: var(--tech-gradient);
+  background-attachment: fixed;
+  color: var(--foreground);
+  font-family: var(--font-family);
+  position: relative;
+  min-height: 100vh;
+  overflow-x: hidden;
+  padding-bottom: 0;
+}
+
+/* Main background overlay */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(180deg, 
+    rgba(66, 76, 180, 0) 0%, 
+    rgba(66, 76, 180, 0.25) 75%, 
+    rgba(66, 76, 180, 0.4) 100%);
+  z-index: -3;
+  pointer-events: none;
+}
+
+/* Top right glow */
+body::after {
+  content: '';
+  position: fixed;
+  top: -10%;
+  right: -10%;
+  width: 70%;
+  height: 70%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 70%);
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* Add tech-inspired pattern */
+.tech-pattern {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 30px 30px;
+  z-index: -2;
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+/* Pink accent glow */
+.tech-pattern::after {
+  content: '';
+  position: fixed;
+  bottom: -20%;
+  left: -5%;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(ellipse, rgba(254, 97, 158, 0.15) 0%, rgba(254, 97, 158, 0) 70%);
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* Footer gradient for smooth transition */
+.footer-gradient {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 300px;
+  background: linear-gradient(to bottom, 
+    rgba(66, 76, 180, 0) 0%, 
+    rgba(66, 76, 180, 0.3) 50%, 
+    rgba(66, 76, 180, 0.5) 100%);
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* Ensure all text is white by default */
+p, span, div, h1, h2, h3, h4, h5, h6, button, a, label, input, textarea, select, option {
+  color: white;
+  font-family: var(--font-family);
+}
+
+/* Override for specific elements that need different colors */
+.text-white {
+  color: white !important;
+}
+
+.text-pink {
+  color: var(--workbrand-pink) !important;
+}
+
+.text-blue {
+  color: var(--workbrand-blue) !important;
+}
+
+.text-red-500 {
+  color: rgb(239, 68, 68) !important;
+}
+
+/* Allow hover states to work */
+a:hover, button:hover {
+  color: inherit;
+}
+
+/* Ensure active tab text is the correct color */
+.border-b-2[style*="color"] {
+  color: var(--active-tab-color, #2F3295) !important;
+}
+
+/* Modern card styling */
+.modern-card {
+  @apply bg-white rounded-lg overflow-hidden;
+  box-shadow: var(--shadow-md);
+  transition: all 0.3s ease;
+}
+
+.modern-card:hover {
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-2px);
+}
+
+/* Modern button styling */
+.btn-primary {
+  @apply px-6 py-3 rounded-lg font-medium text-white transition-all duration-300 flex items-center justify-center;
+  background: linear-gradient(135deg, #3B3EAA, #2F3295);
+  box-shadow: 0 2px 12px rgba(47, 50, 149, 0.15);
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.btn-primary, .btn-primary span, .btn-primary svg {
+  color: white !important;
+}
+
+.btn-primary::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: all 0.5s ease;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(47, 50, 149, 0.25);
+  background: linear-gradient(135deg, #444BD0, #343AAA);
+}
+
+.btn-primary:hover::before {
+  left: 100%;
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(47, 50, 149, 0.2);
+}
+
+/* Modern input styling */
+.modern-input {
+  @apply w-full px-4 py-3 rounded-lg transition-all duration-200;
+  background-color: rgba(255, 255, 255, 0.12) !important;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  color: white !important;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+.modern-input:focus {
+  @apply outline-none ring-2 ring-[#FE619E]/30;
+  border: 1px solid rgba(254, 97, 158, 0.5);
+  background-color: rgba(255, 255, 255, 0.18) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  color: white !important;
+}
+
+.modern-input::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* Glass morphism effect */
+.glass {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.glass-dark {
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+/* Adjust text colors for cards/containers with white background */
+.bg-white p, .bg-white span, .bg-white div, .bg-white h1, .bg-white h2, .bg-white h3, 
+.bg-white h4, .bg-white h5, .bg-white h6, .bg-white a, .bg-white label {
+  color: #333;
+}
+
+.bg-white\/70 p, .bg-white\/70 span, .bg-white\/70 div, .bg-white\/70 h1, .bg-white\/70 h2, 
+.bg-white\/70 h3, .bg-white\/70 h4, .bg-white\/70 h5, .bg-white\/70 h6, .bg-white\/70 a, .bg-white\/70 label {
+  color: #333;
+}
+
+/* Mobile-specific overrides */
+@media (max-width: 768px) {
+  .modern-input {
+    background-color: rgba(63, 75, 150, 0.3) !important;
+    color: white !important;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+  }
+
+  .modern-input:focus {
+    background-color: rgba(63, 75, 150, 0.4) !important;
+  }
+
+  /* Fix iOS input styling */
+  input, textarea {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    border-radius: 10px;
+  }
+  
+  /* Competitor card styling for mobile */
+  .competitor-card {
+    background-color: rgba(63, 75, 150, 0.3) !important;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+  }
+  
+  .competitor-card:hover,
+  .competitor-card:active {
+    background-color: rgba(63, 75, 150, 0.5) !important;
+    border-color: rgba(255, 255, 255, 0.4);
+  }
+  
+  /* Selected competitor card */
+  .competitor-card.bg-white\/12 {
+    background-color: rgba(84, 98, 180, 0.4) !important;
+  }
+}
