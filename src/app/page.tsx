@@ -353,6 +353,7 @@ export default function Home() {
               competitor={comparisonResult.competitor}
               userCompanyName={getValues('companyName')}
               competitorName={comparisonResult.competitorName}
+              isLoading={isComparing}
             />
 
             {/* New Try Different Competitor Box */}

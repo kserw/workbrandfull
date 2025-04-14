@@ -10,17 +10,21 @@ export default function LoadingScreen() {
     "Calculating category scores...",
     "Preparing detailed analysis...",
     "Generating comparison report...",
-    "Almost ready..."
+    "Almost ready...",
+    "Finalizing results...",
+    "Optimizing visualization...",
+    "Preparing insights...",
+    "Loading comparison data..."
   ];
 
   // State to track the current message index
   const [messageIndex, setMessageIndex] = useState(0);
 
-  // Effect to cycle through messages every 2.5 seconds
+  // Effect to cycle through messages every 4 seconds
   useEffect(() => {
     const intervalId = setInterval(() => {
       setMessageIndex((prevIndex) => (prevIndex + 1) % loadingMessages.length);
-    }, 2500);
+    }, 4000);
 
     // Cleanup on unmount
     return () => clearInterval(intervalId);
