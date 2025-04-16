@@ -328,15 +328,15 @@ export default function Home() {
                   }}
                   className="glass p-4 rounded-lg flex flex-col items-center hover:bg-white/10 transition-all duration-300"
                 >
-                  <div className="w-16 h-16 relative mb-3">
+                  <div className="w-32 h-24 relative">
                     <Image
                       src="https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png"
                       alt="Google logo"
                       fill
                       style={{ objectFit: 'contain' }}
+                      priority
                     />
                   </div>
-                  <span className="text-white font-medium">Google</span>
                 </button>
 
                 <button
@@ -346,15 +346,15 @@ export default function Home() {
                   }}
                   className="glass p-4 rounded-lg flex flex-col items-center hover:bg-white/10 transition-all duration-300"
                 >
-                  <div className="w-16 h-16 relative mb-3">
+                  <div className="w-32 h-24 relative">
                     <Image
                       src="https://1000logos.net/wp-content/uploads/2017/05/Walmart-Logo.png"
                       alt="Walmart logo"
                       fill
                       style={{ objectFit: 'contain' }}
+                      priority
                     />
                   </div>
-                  <span className="text-white font-medium">Walmart</span>
                 </button>
 
                 <button
@@ -364,15 +364,15 @@ export default function Home() {
                   }}
                   className="glass p-4 rounded-lg flex flex-col items-center hover:bg-white/10 transition-all duration-300"
                 >
-                  <div className="w-16 h-16 relative mb-3">
+                  <div className="w-32 h-24 relative">
                     <Image
-                      src="https://1000logos.net/wp-content/uploads/2021/02/HubSpot-logo.png"
+                      src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/71/HubSpot_Logo.svg/2560px-HubSpot_Logo.svg.png"
                       alt="HubSpot logo"
                       fill
                       style={{ objectFit: 'contain' }}
+                      priority
                     />
                   </div>
-                  <span className="text-white font-medium">HubSpot</span>
                 </button>
               </div>
             </div>
