@@ -12,6 +12,7 @@ import ComparisonChart from '@/components/ComparisonChart';
 import ResultTabs from '@/components/ResultTabs';
 import { ComparisonResult } from '@/types';
 import { capitalizeText } from '@/utils/formatting';
+import { z } from 'zod';
 
 // Function to transform EVP statement from first-person to third-person
 const transformEvpStatement = (evpStatement: string | undefined | null, companyName: string): string => {
@@ -67,8 +68,8 @@ export default function Home() {
     trigger,
     formState: { errors, isValid, isSubmitting },
   } = useForm<FormSchema>({
-    resolver: zodResolver(formSchemaOnSubmit),
-    mode: 'onChange',
+    resolver: zodResolver(formSchemaOnChange),
+    mode: 'onSubmit',
     defaultValues: {
       companyName: '',
       email: '',
@@ -85,6 +86,9 @@ export default function Home() {
 
   const onSubmit = async (data: FormSchema) => {
     try {
+      // Validate with submit schema first
+      const validatedData = formSchemaOnSubmit.parse(data);
+      
       setIsLoading(true);
       setError(null);
 
@@ -95,9 +99,9 @@ export default function Home() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          companyName: data.companyName,
-          email: data.email,
-          competitorName: data.competitorName
+          companyName: validatedData.companyName,
+          email: validatedData.email,
+          competitorName: validatedData.competitorName
         }),
       });
 
@@ -108,9 +112,9 @@ export default function Home() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          companyName: data.companyName,
-          competitorName: data.competitorName,
-          email: data.email,
+          companyName: validatedData.companyName,
+          competitorName: validatedData.competitorName,
+          email: validatedData.email,
         }),
       });
 
@@ -124,7 +128,15 @@ export default function Home() {
       setIsLoading(false);
     } catch (err) {
       setIsLoading(false);
-      setError(err instanceof Error ? err.message : 'An error occurred');
+      if (err instanceof z.ZodError) {
+        // Handle validation errors
+        const emailError = err.errors.find(e => e.path[0] === 'email');
+        if (emailError) {
+          setError(emailError.message);
+        }
+      } else {
+        setError(err instanceof Error ? err.message : 'An error occurred');
+      }
     }
   };
 
@@ -169,6 +181,17 @@ export default function Home() {
     }
   };
 
+  const handleSuggestedCompanyClick = (companyName: string) => {
+    setValue('competitorName', companyName);
+    
+    const currentCompanyName = getValues('companyName');
+    const currentEmail = getValues('email');
+
+    if (currentCompanyName && currentEmail) {
+      handleSubmit(onSubmit)();
+    }
+  };
+
   return (
     <main className="min-h-screen relative" id="mainContent">
       {/* Tech pattern background */}
@@ -193,7 +216,7 @@ export default function Home() {
           </h1>
           <p className="text-gray-100 text-lg max-w-2xl mx-auto">
             {!comparisonResult 
-              ? "Use our beta, AI-driven Workbrand Score™ to compare your employer brand against other organizations."
+              ? "Use our beta, AI-driven Workbrand Score™ to compare your employer brand against other organizations. Write in a competitor or choose one of the featured organizations."
               : "Here's how your Workbrand Score™ compares to the selected competition."}
           </p>
         </div>
@@ -267,15 +290,41 @@ export default function Home() {
                       <path fillRule="evenodd" d="M12.516 2.17a.75.75 0 00-1.032 0 11.209 11.209 0 01-7.877 3.08.75.75 0 00-.722.515A12.74 12.74 0 002.25 9.75c0 5.942 4.064 10.933 9.563 12.348a.75.75 0 00.374 0c5.499-1.415 9.563-6.406 9.563-12.348 0-1.39-.223-2.73-.635-3.985a.75.75 0 00-.722-.516l.11.168A11.209 11.209 0 0112.516 2.17z" clipRule="evenodd" />
                       <path d="M10.5 8.1v1.07a3 3 0 01.61 1.83v3a3 3 0 01-3 3h-.1a3 3 0 01-3-3v-3a3 3 0 01.59-1.8v-1.07A4.5 4.5 0 0110.5 8.1z" />
                     </svg>
-                    Competitor Name
+                    Comparison Company
                   </label>
                   <input
                     id="competitorName"
                     type="text"
-                    placeholder="Enter competitor name to compare against"
+                    placeholder="Enter company name to compare against"
                     className="modern-input"
                     {...register('competitorName')}
                   />
+                  <div className="mt-2 text-sm">
+                    <span className="text-white/70">Don't know who to compare with? </span>
+                    <button
+                      type="button"
+                      onClick={() => handleSuggestedCompanyClick('Google')}
+                      className="text-[#FE619E] hover:text-[#FE619E]/80 transition-colors font-bold underline"
+                    >
+                      Google
+                    </button>
+                    <span className="text-white/70">, </span>
+                    <button
+                      type="button"
+                      onClick={() => handleSuggestedCompanyClick('Walmart')}
+                      className="text-[#FE619E] hover:text-[#FE619E]/80 transition-colors font-bold underline"
+                    >
+                      Walmart
+                    </button>
+                    <span className="text-white/70">, </span>
+                    <button
+                      type="button"
+                      onClick={() => handleSuggestedCompanyClick('Hubspot')}
+                      className="text-[#FE619E] hover:text-[#FE619E]/80 transition-colors font-bold underline"
+                    >
+                      Hubspot
+                    </button>
+                  </div>
                   {errors.competitorName && (
                     <p className="text-red-500 mt-2">{errors.competitorName.message}</p>
                   )}
