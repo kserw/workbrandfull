@@ -325,12 +325,16 @@ export default function Home() {
                   onClick={() => {
                     setValue('competitorName', 'Google');
                     trigger('competitorName');
+                    // Run comparison if form is ready
+                    if (companyName && email) {
+                      handleSubmit(onSubmit)();
+                    }
                   }}
-                  className="glass p-4 rounded-lg flex flex-col items-center hover:bg-white/10 transition-all duration-300"
+                  className="glass p-4 rounded-lg flex flex-col items-center transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-[#FE619E]/10 hover:-translate-y-1"
                 >
                   <div className="w-32 h-24 relative">
                     <Image
-                      src="https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png"
+                      src="/images/google-logo.png"
                       alt="Google logo"
                       fill
                       style={{ objectFit: 'contain' }}
@@ -343,12 +347,16 @@ export default function Home() {
                   onClick={() => {
                     setValue('competitorName', 'Walmart');
                     trigger('competitorName');
+                    // Run comparison if form is ready
+                    if (companyName && email) {
+                      handleSubmit(onSubmit)();
+                    }
                   }}
-                  className="glass p-4 rounded-lg flex flex-col items-center hover:bg-white/10 transition-all duration-300"
+                  className="glass p-4 rounded-lg flex flex-col items-center transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-[#FE619E]/10 hover:-translate-y-1"
                 >
                   <div className="w-32 h-24 relative">
                     <Image
-                      src="https://1000logos.net/wp-content/uploads/2017/05/Walmart-Logo.png"
+                      src="/images/walmart-logo.png"
                       alt="Walmart logo"
                       fill
                       style={{ objectFit: 'contain' }}
@@ -361,12 +369,16 @@ export default function Home() {
                   onClick={() => {
                     setValue('competitorName', 'HubSpot');
                     trigger('competitorName');
+                    // Run comparison if form is ready
+                    if (companyName && email) {
+                      handleSubmit(onSubmit)();
+                    }
                   }}
-                  className="glass p-4 rounded-lg flex flex-col items-center hover:bg-white/10 transition-all duration-300"
+                  className="glass p-4 rounded-lg flex flex-col items-center transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-[#FE619E]/10 hover:-translate-y-1"
                 >
                   <div className="w-32 h-24 relative">
                     <Image
-                      src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/71/HubSpot_Logo.svg/2560px-HubSpot_Logo.svg.png"
+                      src="/images/hubspot-logo.png"
                       alt="HubSpot logo"
                       fill
                       style={{ objectFit: 'contain' }}
