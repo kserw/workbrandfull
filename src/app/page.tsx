@@ -330,7 +330,7 @@ export default function Home() {
                 >
                   <div className="w-16 h-16 relative mb-3">
                     <Image
-                      src="/images/google-logo.png"
+                      src="https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png"
                       alt="Google logo"
                       fill
                       style={{ objectFit: 'contain' }}
@@ -348,7 +348,7 @@ export default function Home() {
                 >
                   <div className="w-16 h-16 relative mb-3">
                     <Image
-                      src="/images/walmart-logo.png"
+                      src="https://1000logos.net/wp-content/uploads/2017/05/Walmart-Logo.png"
                       alt="Walmart logo"
                       fill
                       style={{ objectFit: 'contain' }}
@@ -366,7 +366,7 @@ export default function Home() {
                 >
                   <div className="w-16 h-16 relative mb-3">
                     <Image
-                      src="/images/hubspot-logo.png"
+                      src="https://1000logos.net/wp-content/uploads/2021/02/HubSpot-logo.png"
                       alt="HubSpot logo"
                       fill
                       style={{ objectFit: 'contain' }}
