@@ -193,7 +193,7 @@ export default function Home() {
           </h1>
           <p className="text-gray-100 text-lg max-w-2xl mx-auto">
             {!comparisonResult 
-              ? "Use our beta, AI-driven Workbrand Score™ to compare your employer brand against other organizations."
+              ? "Use our beta, AI-driven Workbrand Score™ to compare your employer brand against other organizations. Write in a competitor or choose one of the featured organizations."
               : "Here's how your Workbrand Score™ compares to the selected competition."}
           </p>
         </div>
@@ -315,6 +315,66 @@ export default function Home() {
                   </button>
                 </div>
               </form>
+            </div>
+
+            {/* Featured Companies Section */}
+            <div className="p-6 bg-white/5 border-t border-white/10">
+              <h3 className="text-lg font-semibold text-white mb-4">Featured Organizations</h3>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <button
+                  onClick={() => {
+                    setValue('competitorName', 'Google');
+                    trigger('competitorName');
+                  }}
+                  className="glass p-4 rounded-lg flex flex-col items-center hover:bg-white/10 transition-all duration-300"
+                >
+                  <div className="w-16 h-16 relative mb-3">
+                    <Image
+                      src="/images/google-logo.png"
+                      alt="Google logo"
+                      fill
+                      style={{ objectFit: 'contain' }}
+                    />
+                  </div>
+                  <span className="text-white font-medium">Google</span>
+                </button>
+
+                <button
+                  onClick={() => {
+                    setValue('competitorName', 'Walmart');
+                    trigger('competitorName');
+                  }}
+                  className="glass p-4 rounded-lg flex flex-col items-center hover:bg-white/10 transition-all duration-300"
+                >
+                  <div className="w-16 h-16 relative mb-3">
+                    <Image
+                      src="/images/walmart-logo.png"
+                      alt="Walmart logo"
+                      fill
+                      style={{ objectFit: 'contain' }}
+                    />
+                  </div>
+                  <span className="text-white font-medium">Walmart</span>
+                </button>
+
+                <button
+                  onClick={() => {
+                    setValue('competitorName', 'HubSpot');
+                    trigger('competitorName');
+                  }}
+                  className="glass p-4 rounded-lg flex flex-col items-center hover:bg-white/10 transition-all duration-300"
+                >
+                  <div className="w-16 h-16 relative mb-3">
+                    <Image
+                      src="/images/hubspot-logo.png"
+                      alt="HubSpot logo"
+                      fill
+                      style={{ objectFit: 'contain' }}
+                    />
+                  </div>
+                  <span className="text-white font-medium">HubSpot</span>
+                </button>
+              </div>
             </div>
           </div>
         ) : (
